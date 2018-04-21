@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/custom.css') }}">
     <title>ReptAuto: Dashboard</title>
@@ -16,14 +17,16 @@
         </div>
     </nav>
 
+    <style>
+    </style>
+
     <div class="container">
         <h2>Live Feed</h2>
 
         <img width="50%" src="{{url_for('static', filename='img/webcam.jpg')}}">
 
         <h2>Manual Control</h2>
-        <button>Rotate Clockwise</button>
-        <button>Rotate Counterclockwise</button>
+        <button id="rotate">Rotate</button>
 
         <h3>Stats</h3>
         <ul>
@@ -38,6 +41,41 @@
         </ul>
 
     </div>
+
+    <script>
+        function sendRotateRequest() {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        alert("Rotating!");
+                    } else {
+                        alert("Could not rotate reptAuto for some reason");
+                    }
+                }
+            }
+
+            xhr.open("POST", window.location.origin + "/api/rotate", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ direction: "clockwise" }));
+        }
+
+        function disableButton(id) {
+            document.getElementById(id).disabled = true;
+        }
+
+        function enableButton(id) {
+            document.getElementById(id).disabled = false;
+        }
+
+        document.getElementById("rotate").addEventListener("click", function(e) {
+            disableButton("rotate");
+            sendRotateRequest();
+            setTimeout(function() { enableButton("rotate");}, 3000);
+        });
+
+    </script>
 
 </body>
 </html>

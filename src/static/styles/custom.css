@@ -36,3 +36,8 @@
 .active {
     background: #FFFFFF;
 }
+
+#rotate {
+    width: 50%;
+    font-size: 1.5em;
+}
