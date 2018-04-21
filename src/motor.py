@@ -1,5 +1,5 @@
 #
-# reptauto.py
+# motor.py
 # Authors:
 #   Sergio Corral
 #
