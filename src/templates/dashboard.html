@@ -31,18 +31,40 @@
         <h3>Stats</h3>
         <ul>
             <li>Temperature: 35c</li>
+            <li>Time until next rotation: <span id="countdown"></span></li>
         </ul>
 
-        <h2>Feeding Schedule</h2>
-
-        <ul>
-            <li>Time until next rotation: 1 hour 32 minutes</li>
-            <li>Rotate everyday at: <input id="time" type="time"></li>
-        </ul>
 
     </div>
 
     <script>
+        function minutesUntilMidnight() {
+            var midnight = new Date();
+            midnight.setHours( 24 );
+            midnight.setMinutes( 0 );
+            midnight.setSeconds( 0 );
+            midnight.setMilliseconds( 0 );
+            return ( midnight.getTime() - new Date().getTime() ) / 1000 / 60;
+        }
+
+        setInterval(function() {
+            var time = minutesUntilMidnight();
+
+            var hours = Math.floor(time / 60);
+            var minutes = Math.floor((time / 60) % 1 * 60);
+            var seconds = Math.floor((time / 60) % 1 * 60 % 1 * 60);
+
+            // Pad with leading 0 if needed
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            var txt = hours + ":" + minutes + ":" + seconds;
+            document.getElementById("countdown").innerHTML = txt;
+
+        }, 1000);
+
+
         function sendRotateRequest() {
             var xhr = new XMLHttpRequest();
 
