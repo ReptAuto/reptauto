@@ -5,6 +5,7 @@
 #
 
 import uuid
+from motor import Motor
 from flask import Flask, render_template, redirect, url_for, session, request
 
 app = Flask(__name__)
@@ -13,6 +14,8 @@ app.config["SECRET_KEY"] = str(uuid.uuid4())
 USERNAME = "asu"
 PASSWORD = "asu"  # Change this to whatever
 
+REPT_AUTO_MOTOR = Motor(16,18,22) # Numbers are pins on the breadboard
+ROTATION_TIME_SECONDS = 10
 
 #
 # Server Routes
@@ -67,6 +70,19 @@ def login_api():
 
     return "Bad password or username", 403
 
+@app.route('/api/rotate', methods=["POST"])
+def rotate():
+    content = request.get_json(silent=True, force=True)
+    if content is None:
+        return "Missing {'direction': 'clockwise'}", 400
+
+    # Rotate the motor
+    REPT_AUTO_MOTOR.runMotor(ROTATION_TIME_SECONDS)
+    print("rotating motor")
+
+    return "Rotating", 200
+
+
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=False)
