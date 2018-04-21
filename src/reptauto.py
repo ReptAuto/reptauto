@@ -72,6 +72,9 @@ def login_api():
 
 @app.route('/api/rotate', methods=["POST"])
 def rotate():
+    if 'authenticated' not in session:
+        return redirect(url_for('login'))
+
     content = request.get_json(silent=True, force=True)
     if content is None:
         return "Missing {'direction': 'clockwise'}", 400
